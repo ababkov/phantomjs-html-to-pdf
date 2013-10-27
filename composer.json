@@ -1,0 +1,19 @@
+{
+    "name": "rex/phantomjs-html-to-pdf",
+    "description": "A php wrapper for phantomjs to make rendering pdfs more straight forward (alternative to wkhtmltopdf).",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Alex Babkov",
+            "email": "alex.babkov@rexsoftware.com.au"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Rex": "src/"
+        }
+    },
+    "require": {
+        "symfony/process": "2.3.*"
+    }
+}
