@@ -5,6 +5,7 @@ namespace Rex\PhantomJs;
 use Rex\PhantomJs\Common\Exception\Exception;
 use Rex\PhantomJs\Common\Exception\InvalidArgumentException;
 use Rex\PhantomJs\Common\Exception\RuntimeException;
+use Symfony\Component\Process;
 
 class Renderer{
 	protected $_bin_path = null;
@@ -20,9 +21,9 @@ class Renderer{
 		Constants::OPTION_MARGIN=>"",
 		Constants::OPTION_ORIENTATION=>Constants::ORIENTATION_PORTRAIT,
 		Constants::OPTION_ZOOM=>1,
-		Constants::OPTION_FOOTER_HTML=>null,
+		Constants::OPTION_FOOTER_HTML_PATH=>null,
 		Constants::OPTION_FOOTER_HEIGHT=>"0cm",
-		Constants::OPTION_HEADER_HTML=>null,
+		Constants::OPTION_HEADER_HTML_PATH=>null,
 		Constants::OPTION_HEADER_HEIGHT=>"0cm",
 		Constants::OPTION_WAIT_TIME=>200,
 	);
@@ -51,8 +52,8 @@ class Renderer{
 			Constants::OPTION_MARGIN_BOTTOM=>"The bottom margin as an int / float + a unit. E.g. 1cm or 1.1in",
 			Constants::OPTION_ORIENTATION=>"The orientation: Constants::ORIENTATION_PORTRAIT, Constants::ORIENTATION_LANDSCAPE",
 			Constants::OPTION_ZOOM=>"The zoom level where 1 is 100%. e.g. for 140% use 1.4",
-			Constants::OPTION_HEADER_HTML=>"Html to be used in the header. Use {{page_number}} for the page number, {{total_pages}} for the total pages. Ensure you also set the header height option.",
-			Constants::OPTION_FOOTER_HTML=>"Html to be used in the footer. Use {{page_number}} for the page number, {{total_pages}} for the total pages. Ensure you also set the footer height option.",
+			Constants::OPTION_HEADER_HTML=>"An html string to be used as the header. Use {{page_number}} for the page number, {{total_pages}} for the total pages. Ensure you also set the header height option.",
+			Constants::OPTION_FOOTER_HTML=>"An html string to be used as the footer. Use {{page_number}} for the page number, {{total_pages}} for the total pages. Ensure you also set the footer height option.",
 			Constants::OPTION_HEADER_HEIGHT=>"The height of the footer as an int / float + a unit. E.g. 1cm or 1.1in",
 			Constants::OPTION_FOOTER_HEIGHT=>"The height of the header as an int / float + a unit. E.g. 1cm or 1.1in",
 			Constants::OPTION_WAIT_TIME=>"The wait time in ms"
@@ -169,6 +170,25 @@ class Renderer{
 				break;
 			case Constants::OPTION_FOOTER_HTML:
 			case Constants::OPTION_HEADER_HTML:
+				if( $option_key == Constants::OPTION_FOOTER_HTML )
+					$file_option_key = Constants::OPTION_FOOTER_HTML_PATH;
+				else
+					$file_option_key = Constants::OPTION_HEADER_HTML_PATH;
+
+				$file_option_value = $this->getOption($option_key);
+
+				if( $file_option_value && $option_value===null ){
+					unlink($file_option_value);
+					unset($this->_options[$file_option_key]);
+				} else {
+					if( !file_exists($file_option_value) ){
+						$file_option_value = $this->_getNewTempFilePath("html");
+						$this->_options[$file_option_key] = $file_option_value;
+					}
+					file_put_contents($file_option_value,$option_value);
+				}
+				return;
+				break;
 			case Constants::OPTION_FORMAT:
 				//Anything is okay here
 				break;
@@ -218,7 +238,7 @@ class Renderer{
 			$output_path = $this->_getNewTempFilePath("pdf");
 
 		//Build process
-		$builder = new \Symfony\Component\Process\ProcessBuilder(array(
+		$builder = new Process\ProcessBuilder(array(
 			dirname(__FILE__)."/Js/render.js",
 			$this->_html_local_uri,
 			$output_path,

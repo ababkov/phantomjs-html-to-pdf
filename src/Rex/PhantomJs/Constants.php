@@ -49,6 +49,8 @@ class Constants{
 	const OPTION_MARGIN = "margin";
 	const OPTION_HEADER_HTML = "header_html";
 	const OPTION_FOOTER_HTML = "footer_html";
+	const OPTION_HEADER_HTML_PATH = "header_html_path";
+	const OPTION_FOOTER_HTML_PATH = "footer_html_path";
 	const OPTION_HEADER_HEIGHT = "header_height";
 	const OPTION_FOOTER_HEIGHT = "footer_height";
 	const OPTION_ZOOM = "zoom";
