@@ -56,8 +56,7 @@ header('Content-Length: ' . filesize($output_file));
 ob_clean();
 flush();
 readfile($output_file);
-exit();
-```
+exit();```
 
 ## Examples
 If the binary isn't in your path, make sure you set it in examples/config.php.
