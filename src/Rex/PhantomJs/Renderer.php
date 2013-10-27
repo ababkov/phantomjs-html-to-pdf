@@ -230,7 +230,7 @@ class Renderer{
 		//Run process
 		$process->run();
 		if( !$process->isSuccessful() )
-			throw new RuntimeException($process->getErrorOutput());
+			throw new RuntimeException($process->getErrorOutput().", Command Line: ".$process->getCommandLine());
 		echo $process->getOutput();
 
 		//Return the output path
