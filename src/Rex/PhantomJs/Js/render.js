@@ -37,8 +37,6 @@ if( options.footer_html_path ){
 }
 
 page.paperSize = {
-    format: options.format,
-    orientation: options.orientation,
     margin: {
         top: options.margin_top,
         right: options.margin_right,
@@ -58,6 +56,15 @@ page.paperSize = {
         })
     }
 }
+if( options.format.indexOf("*") != -1 ){
+    var size = option.format.split("*");
+    page.width = size[0];
+    page.height = size[1];
+} else {
+    page.paperSize.format = options.format;
+    page.paperSize.orientation = options.orientation;
+}
+
 page.zoomFactor = (options.zoom?options.zoom:1);
 page.open(options.html_uri, function(status){
     if( status !== "success" ){
