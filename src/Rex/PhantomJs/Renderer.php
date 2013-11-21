@@ -166,7 +166,7 @@ class Renderer{
 				break;
 			case Constants::OPTION_ORIENTATION:
 				if( !in_array($option_value,array(Constants::ORIENTATION_PORTRAIT,Constants::ORIENTATION_LANDSCAPE)) )
-					throw new InvalidArgumentException("The '{}' expects either '".Constants::ORIENTATION_PORTRAIT."' or '".Constants::ORIENTATION_LANDSCAPE."'. The valid you specified '{$option_value}' is invalid.");
+					throw new InvalidArgumentException("The '{}' expects either '".Constants::ORIENTATION_PORTRAIT."' or '".Constants::ORIENTATION_LANDSCAPE."'. The value you specified '{$option_value}' is invalid.");
 				break;
 			case Constants::OPTION_FOOTER_HTML:
 			case Constants::OPTION_HEADER_HTML:
