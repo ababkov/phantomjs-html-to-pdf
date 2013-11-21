@@ -55,4 +55,6 @@ class Constants{
 	const OPTION_FOOTER_HEIGHT = "footer_height";
 	const OPTION_ZOOM = "zoom";
 	const OPTION_WAIT_TIME = "wait_time";
+	const OPTION_HEADER_ON_FIRST_PAGE = "header_on_first_page";
+	const OPTION_FOOTER_ON_FIRST_PAGE = "footer_on_first_page";
 }

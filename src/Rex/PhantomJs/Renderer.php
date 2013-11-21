@@ -26,6 +26,8 @@ class Renderer{
 		Constants::OPTION_HEADER_HTML_PATH=>null,
 		Constants::OPTION_HEADER_HEIGHT=>"0cm",
 		Constants::OPTION_WAIT_TIME=>200,
+		Constants::OPTION_HEADER_ON_FIRST_PAGE=>false,
+		Constants::OPTION_FOOTER_ON_FIRST_PAGE=>true
 	);
 
 	/**
@@ -56,7 +58,9 @@ class Renderer{
 			Constants::OPTION_FOOTER_HTML=>"An html string to be used as the footer. Use {{page_number}} for the page number, {{total_pages}} for the total pages. Ensure you also set the footer height option.",
 			Constants::OPTION_HEADER_HEIGHT=>"The height of the footer as an int / float + a unit. E.g. 1cm or 1.1in",
 			Constants::OPTION_FOOTER_HEIGHT=>"The height of the header as an int / float + a unit. E.g. 1cm or 1.1in",
-			Constants::OPTION_WAIT_TIME=>"The wait time in ms"
+			Constants::OPTION_WAIT_TIME=>"The wait time in ms",
+			Constants::OPTION_HEADER_ON_FIRST_PAGE=>"True if the header should be included on first page",
+			Constants::OPTION_FOOTER_ON_FIRST_PAGE=>"True if the footer should be included on first page",
 		);
 	}
 
@@ -161,7 +165,7 @@ class Renderer{
 			case Constants::OPTION_MARGIN:
 			case Constants::OPTION_FOOTER_HEIGHT:
 			case Constants::OPTION_HEADER_HEIGHT:
-				if( !preg_match("/\d+(\.\d+)?(cm|in|px|em)/",$option_value) && $option_value !== null && $option_value != 0 )
+				if( !preg_match("/\d+(\.\d+)?(mm|cm|in|px|em)/",$option_value) && $option_value !== null && $option_value != 0 )
 					throw new InvalidArgumentException("The '{$option_key}' option expects an integer or decimal followed by a unit: cm,em,in,px. The value you specified '{$option_value}' is invalid.");
 				break;
 			case Constants::OPTION_ORIENTATION:
@@ -189,6 +193,8 @@ class Renderer{
 				}
 				return;
 				break;
+			case Constants::OPTION_FOOTER_ON_FIRST_PAGE:
+			case Constants::OPTION_HEADER_ON_FIRST_PAGE:
 			case Constants::OPTION_FORMAT:
 				//Anything is okay here
 				break;
@@ -246,12 +252,11 @@ class Renderer{
 		));
 		$builder->setPrefix($this->getBinPath()?$this->getBinPath():"phantomjs");
 		$process = $builder->getProcess();
-
 		//Run process
 		$process->run();
+
 		if( !$process->isSuccessful() )
-			throw new RuntimeException($process->getErrorOutput().", Command Line: ".$process->getCommandLine());
-		echo $process->getOutput();
+			throw new RuntimeException($process->getOutput()." ".$process->getErrorOutput().", Command Line: ".$process->getCommandLine());
 
 		//Return the output path
 		return $output_path;

@@ -36,7 +36,9 @@ if( options.footer_html_path ){
     options.footer_html = fs.read(options.footer_html_path);
 }
 
-page.paperSize = {
+
+//Create paperSize object
+var paperSize = {
     margin: {
         top: options.margin_top,
         right: options.margin_right,
@@ -46,24 +48,30 @@ page.paperSize = {
     header: {
         height: options.header_height,
         contents: phantom.callback(function(pageNum, numPages) {
-            return options.header_html.replace(/{{page_number}}/gi,pageNum).replace(/{{total_pages}}/gi,numPages);
+            if( options.header_on_first_page || pageNum > 1 )
+                return options.header_html.replace(/{{page_number}}/gi,pageNum).replace(/{{total_pages}}/gi,numPages);
         })
     },
     footer: {
         height: options.footer_height,
         contents: phantom.callback(function(pageNum, numPages) {
-            return options.footer_html.replace(/{{page_number}}/gi,pageNum).replace(/{{total_pages}}/gi,numPages);
+            if( options.footer_on_first_page || pageNum > 1 )
+                return options.footer_html.replace(/{{page_number}}/gi,pageNum).replace(/{{total_pages}}/gi,numPages);
         })
     }
 }
+
 if( options.format.indexOf("*") != -1 ){
-    var size = option.format.split("*");
-    page.width = size[0];
-    page.height = size[1];
+    var size = options.format.split("*");
+    paperSize.width = size[0];
+    paperSize.height = size[1];
 } else {
-    page.paperSize.format = options.format;
-    page.paperSize.orientation = options.orientation;
+    paperSize.format = options.format;
+    paperSize.orientation = options.orientation;
 }
+
+//Assign papersize to page papersize
+page.paperSize = paperSize;
 
 page.zoomFactor = (options.zoom?options.zoom:1);
 page.open(options.html_uri, function(status){
