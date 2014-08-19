@@ -166,7 +166,7 @@ class Renderer{
 			case Constants::OPTION_FOOTER_HEIGHT:
 			case Constants::OPTION_HEADER_HEIGHT:
 				if( !preg_match("/\d+(\.\d+)?(mm|cm|in|px|em)/",$option_value) && $option_value !== null && $option_value != 0 )
-					throw new InvalidArgumentException("The '{$option_key}' option expects an integer or decimal followed by a unit: cm,em,in,px. The value you specified '{$option_value}' is invalid.");
+					throw new InvalidArgumentException("The '{$option_key}' option expects an integer or decimal followed by a unit: cm,mm,em,in,px. The value you specified '{$option_value}' is invalid.");
 				break;
 			case Constants::OPTION_ORIENTATION:
 				if( !in_array($option_value,array(Constants::ORIENTATION_PORTRAIT,Constants::ORIENTATION_LANDSCAPE)) )
